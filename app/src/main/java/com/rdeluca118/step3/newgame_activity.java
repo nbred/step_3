@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.content.Intent;
+
 import java.lang.String;
 
 public class newgame_activity extends AppCompatActivity {
@@ -17,13 +18,15 @@ public class newgame_activity extends AppCompatActivity {
 
     }
 
-    public void startGame(View v){
+    public void startGame(View v) {
 
         EditText p1 = findViewById(R.id.player1Name);
         String p1name = p1.getText().toString();
         EditText p2 = findViewById(R.id.player2Name);
         String p2name = p2.getText().toString();
         Intent i = new Intent(this, GameActivity.class);
-
+        i.putExtra("p1name", p1name);
+        i.putExtra("p2name", p2name);
+        startActivity(i);
     }
 }
