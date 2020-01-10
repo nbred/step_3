@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Step 3</string>
+
+    <string name="player1">Player 1 name</string>
+    <string name="player2">Player 2 name</string>
+    <string name="p1">Player 1:</string>
+    <string name="startgame">Play</string>
+
+
+</resources>
