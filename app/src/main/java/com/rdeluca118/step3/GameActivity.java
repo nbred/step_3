@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.RadioGroup;
 import android.view.ViewGroup;
-import android.graphics.Typeface;
+//import android.graphics.Typeface;
 import android.view.View;
 import android.widget.Button;
 import android.util.Log;
@@ -22,7 +22,7 @@ public class GameActivity extends AppCompatActivity {
     private int[] darts = {0, 0, 0, 0};
     private int col1Value, col2Value;
     TextView totView, p1, p2;
-    TextView col1Score, col2Score = findViewById(R.id.p2score), curCol, startCol;
+    TextView col1Score, col2Score, curCol, startCol;
     RadioGroup theRadioGroup;
     Context context;
 
@@ -37,23 +37,18 @@ public class GameActivity extends AppCompatActivity {
         p1Name = intent.getStringExtra("p1name");
         p2Name = intent.getStringExtra("p2name");
 
+        p1 = findViewById(R.id.p1);
+        p1.setText(p1Name);
+
+        p2 = findViewById(R.id.p2);
+        p2.setText(p2Name);
+
         ViewGroup layout = findViewById(R.id.left_pane);
         disableEnableControls(false, layout);
 
-        //Typeface myFont = Typeface.createFromAsset(getAssets(), "fonts/Stainy.ttf");
-        Typeface chalk = Typeface.createFromAsset(getAssets(), "fonts/LC Chalk.ttf");
-
-        p1 = findViewById(R.id.p1);
-        p1.setTypeface(chalk);
-        p2 = findViewById(R.id.p2);
-        p2.setTypeface(chalk);
-
-        col1Score = findViewById(R.id.p1score);
-        col1Score.setTypeface(chalk);
-        col2Score = findViewById(R.id.p2score);
-        col2Score.setTypeface(chalk);
 
         theRadioGroup = findViewById(R.id.rg_dt);
+
         col1Score = findViewById(R.id.p1score);
         col2Score = findViewById(R.id.p2score);
         curCol = col1Score;

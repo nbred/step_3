@@ -448,7 +448,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
+                android:fontFamily="@font/lc_chalk"
                 android:gravity="top|center_vertical|center_horizontal"
+                android:text="player 1"
                 android:textAlignment="gravity"
                 android:textColor="@android:color/holo_orange_light"
                 android:textColorHint="@android:color/holo_blue_dark"
@@ -462,13 +464,15 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
+                android:fontFamily="@font/lc_chalk"
                 android:gravity="top|center_vertical|center_horizontal"
                 android:textAlignment="gravity"
                 android:textColor="@android:color/holo_orange_light"
                 android:textColorHint="@android:color/holo_blue_dark"
                 android:textSize="30sp"
                 android:textStyle="normal|bold|italic"
-                android:typeface="normal" />
+                android:typeface="normal"
+                tools:text="player 2" />
         </LinearLayout>
 
         <LinearLayout
@@ -484,6 +488,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
+                android:fontFamily="@font/lc_chalk"
                 android:gravity="top|center_vertical|center_horizontal"
                 android:text="501"
                 android:textAlignment="gravity"
@@ -497,6 +502,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
+                android:fontFamily="@font/lc_chalk"
                 android:gravity="top|center_vertical|center_horizontal"
                 android:text="501"
                 android:textAlignment="gravity"

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<font-family xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <!-- lc_chalk -->
+    <font
+        app:font="@font/lc_chalk"
+        app:fontStyle="normal"
+        app:fontWeight="400"
+
+        android:font="@font/lc_chalk"
+        android:fontStyle="normal"
+        android:fontWeight="400" />
+
+    <!-- stainy -->
+    <font
+        app:font="@font/stainy"
+        app:fontStyle="normal"
+        app:fontWeight="400"
+
+        android:font="@font/stainy"
+        android:fontStyle="normal"
+        android:fontWeight="400" />
+
+</font-family>
