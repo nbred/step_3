@@ -6,25 +6,29 @@ import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.RadioGroup;
 import android.view.ViewGroup;
-//import android.graphics.Typeface;
 import android.view.View;
 import android.widget.Button;
 import android.util.Log;
 import android.widget.RadioButton;
 import android.content.Intent;
 import android.content.Context;
+import android.widget.Toast;
+import android.media.ToneGenerator;
+import android.media.AudioManager;
 
 public class GameActivity extends AppCompatActivity {
 
-    private String p1Name;
-    private String p2Name;
+    private Player p1Name;
+    private Player p2Name;
+    private Game theGame;
     private int dartOrd, tTotal;
     private int[] darts = {0, 0, 0, 0};
     private int col1Value, col2Value;
-    TextView totView, p1, p2;
+    TextView totView, p1, p2, curdartview;
     TextView col1Score, col2Score, curCol, startCol;
     RadioGroup theRadioGroup;
     Context context;
+    private boolean haveNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,24 +38,26 @@ public class GameActivity extends AppCompatActivity {
         context = this;
 
         Intent intent = getIntent();
-        p1Name = intent.getStringExtra("p1name");
-        p2Name = intent.getStringExtra("p2name");
+        p1Name = new Player(intent.getStringExtra("p1name"));
+        p2Name = new Player(intent.getStringExtra("p2name"));
 
         p1 = findViewById(R.id.p1);
-        p1.setText(p1Name);
-
+        p1.setText(p1Name.getName());
         p2 = findViewById(R.id.p2);
-        p2.setText(p2Name);
+        p2.setText(p2Name.getName());
+
+        theGame = new Game(p1Name, p2Name, 5);
 
         ViewGroup layout = findViewById(R.id.left_pane);
         disableEnableControls(false, layout);
-
 
         theRadioGroup = findViewById(R.id.rg_dt);
 
         col1Score = findViewById(R.id.p1score);
         col2Score = findViewById(R.id.p2score);
         curCol = col1Score;
+
+        haveNumber = false;
     }
 
     public void numberClicked(View v) {
@@ -60,6 +66,9 @@ public class GameActivity extends AppCompatActivity {
         try {
             int buttonValue = Integer.parseInt(buttonText);
             darts[dartOrd] = buttonValue;
+            haveNumber = true;
+            Button child = findViewById(R.id.button_count);
+            child.setEnabled(true);
 
         } catch (NumberFormatException nfe) {
             Log.i("NUMBER", "Couldn't parse.");
@@ -74,10 +83,10 @@ public class GameActivity extends AppCompatActivity {
         ViewGroup layout;
 
         TextView etp1 = findViewById(R.id.p1);
-        etp1.setText(p1Name);
+        etp1.setText(p1Name.getName());
 
         TextView etp2 = findViewById(R.id.p2);
-        etp2.setText(p2Name);
+        etp2.setText(p2Name.getName());
 
         //etp1.setActivated(false);
         etp1.setEnabled(false);
@@ -101,7 +110,17 @@ public class GameActivity extends AppCompatActivity {
         startCol = curCol;
     }
 
+    public void taskFailed() {
+        Toast.makeText(getApplicationContext(),
+                "Can not have TRIPLE 25",
+                Toast.LENGTH_SHORT).show();
+
+        ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
+        toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 500);
+    }
+
     public void countShot(View v) {
+        TextView view;
         //scratch
         int scratch = v.getId();
         Button button = findViewById(R.id.button00);
@@ -110,64 +129,82 @@ public class GameActivity extends AppCompatActivity {
             darts[dartOrd] = 0;
         }
 
-        //isDouble = true;
-        RadioButton doubleOpt = findViewById(R.id.radio_double);
-        if (doubleOpt.isChecked()) {
-            int x = darts[dartOrd] * 2;
-            darts[dartOrd] = x;
-            theRadioGroup.clearCheck();
-        }
-
-        //isTriple = true;
-        RadioButton tripleOpt = findViewById(R.id.radio_triple);
-        if (tripleOpt.isChecked()) {
-            if (darts[dartOrd] == 25) {
-                //      ERROR ====================================================
-                theRadioGroup.clearCheck();
-            } else {
-                int x = darts[dartOrd] * 3;
+        if (haveNumber) {
+            //isDouble = true;
+            RadioButton doubleOpt = findViewById(R.id.radio_double);
+            if (doubleOpt.isChecked()) {
+                int x = darts[dartOrd] * 2;
                 darts[dartOrd] = x;
                 theRadioGroup.clearCheck();
             }
+
+            //isTriple = true;
+            RadioButton tripleOpt = findViewById(R.id.radio_triple);
+            if (tripleOpt.isChecked()) {
+                if (darts[dartOrd] == 25) {
+                    // no TRIPLE 25
+                    taskFailed();
+                    theRadioGroup.clearCheck();
+                } else {
+                    int x = darts[dartOrd] * 3;
+                    darts[dartOrd] = x;
+                    theRadioGroup.clearCheck();
+                }
+            }
+
+            totView = findViewById(R.id.turn);
+
+            switch (dartOrd) {
+                case 1:
+                    view = findViewById(R.id.dart1);
+                    view.setText(String.valueOf(darts[dartOrd]));
+                    curdartview = view;
+                    tTotal = darts[1];
+                    totView.setText(String.valueOf(tTotal));
+                    break;
+                case 2:
+                    view = findViewById(R.id.dart2);
+                    view.setText(String.valueOf(darts[dartOrd]));
+                    curdartview = view;
+                    tTotal = darts[1] + darts[2];
+                    totView.setText(String.valueOf(tTotal));
+                    break;
+                case 3:
+                    view = findViewById(R.id.dart3);
+                    view.setText(String.valueOf(darts[dartOrd]));
+                    curdartview = view;
+                    tTotal = darts[1] + darts[2] + darts[3];
+                    totView.setText(String.valueOf(tTotal));
+            }
+            curdartview.setBackgroundColor(0xFF00FF00);
+            dartOrd++;
+            haveNumber = false;
+            Button child = findViewById(R.id.button_count);
+            child.setEnabled(false);
         }
-
-        TextView view;
-        totView = findViewById(R.id.turn);
-
-        switch (dartOrd) {
-            case 1:
-                view = findViewById(R.id.dart1);
-                view.setText(String.valueOf(darts[dartOrd]));
-
-                tTotal = darts[1];
-                totView.setText(String.valueOf(tTotal));
-                break;
-            case 2:
-                view = findViewById(R.id.dart2);
-                view.setText(String.valueOf(darts[dartOrd]));
-
-                tTotal = darts[1] + darts[2];
-                totView.setText(String.valueOf(tTotal));
-                break;
-            case 3:
-                view = findViewById(R.id.dart3);
-                view.setText(String.valueOf(darts[dartOrd]));
-
-                tTotal = darts[1] + darts[2] + darts[3];
-                totView.setText(String.valueOf(tTotal));
-                break;
-        }
-        dartOrd++;
     }
-
     public void doReset(View v) {
         darts[dartOrd] = 0;
         theRadioGroup.clearCheck();
     }
 
     public void doScratch(View v) {
-        countShot(v);
-        //darts[dartOrd] = 0;
+        TextView view;
+        switch (dartOrd) {
+            case 1:
+                view = findViewById(R.id.dart1);
+                view.setBackgroundColor(0xFF00FF00);
+                break;
+            case 2:
+                view = findViewById(R.id.dart2);
+                view.setBackgroundColor(0xFF00FF00);
+                break;
+            case 3:
+                view = findViewById(R.id.dart3);
+                view.setBackgroundColor(0xFF00FF00);
+        }
+        darts[dartOrd] = 0;
+        dartOrd++;
     }
 
     public void doBust(View v) {
@@ -183,10 +220,13 @@ public class GameActivity extends AppCompatActivity {
         darts[3] = 0;
         dartOrd = 1;
         view = findViewById(R.id.dart1);
+        view.setBackgroundColor(0x00000000);
         view.setText("0");
         view = findViewById(R.id.dart2);
+        view.setBackgroundColor(0x00000000);
         view.setText("0");
         view = findViewById(R.id.dart3);
+        view.setBackgroundColor(0x00000000);
         view.setText("0");
         totView.setText("0");
 

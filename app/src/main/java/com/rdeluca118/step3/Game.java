@@ -9,10 +9,10 @@ public class Game {
     private Player Player1, Player2;
     private Integer legs;
 
-    public void Game(String p1, String p2, Integer maxlegs){
+    public Game(Player p1, Player p2, Integer maxlegs){
 
-        Player1 = new Player(p1);
-        Player2 = new Player(p2);
+        Player1 = p1;
+        Player2 = p2;
 
         legs = maxlegs;
 
