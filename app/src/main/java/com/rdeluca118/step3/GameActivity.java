@@ -29,6 +29,7 @@ public class GameActivity extends AppCompatActivity {
     RadioGroup theRadioGroup;
     Context context;
     private boolean haveNumber;
+    private DatabaseHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,10 +37,11 @@ public class GameActivity extends AppCompatActivity {
         setContentView(R.layout.activity_game);
 
         context = this;
+        databaseHelper = new DatabaseHelper(this);
 
         Intent intent = getIntent();
-        p1Name = new Player(intent.getStringExtra("p1name"));
-        p2Name = new Player(intent.getStringExtra("p2name"));
+        p1Name = new Player(databaseHelper, intent.getStringExtra("p1name"));
+        p2Name = new Player(databaseHelper, intent.getStringExtra("p2name"));
 
         p1 = findViewById(R.id.p1);
         p1.setText(p1Name.getName());
