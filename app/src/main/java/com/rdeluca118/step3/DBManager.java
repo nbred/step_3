@@ -32,11 +32,14 @@ public class DBManager {
         dbHelper.close();
     }
 
-    public void insert(String name, String desc) {
+
+    // =============================================================================================
+    // player table operations
+    // =============================================================================================
+    public void insert_player(String name) {
        ContentValues contentValue = new ContentValues();
-//        contentValue.put(DatabaseHelper.SUBJECT, name);
-//        contentValue.put(DatabaseHelper.DESC, desc);
-//        database.insert(DatabaseHelper.TABLE_NAME, null, contentValue);
+        contentValue.put(DatabaseHelper.player_name, name);
+        database.insert(DatabaseHelper.TABLE_PLAYER, null, contentValue);
     }
 
     public Cursor fetch() {

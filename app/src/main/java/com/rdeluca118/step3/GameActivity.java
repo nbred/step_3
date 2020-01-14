@@ -37,11 +37,10 @@ public class GameActivity extends AppCompatActivity {
         setContentView(R.layout.activity_game);
 
         context = this;
-        databaseHelper = new DatabaseHelper(this);
 
         Intent intent = getIntent();
-        p1Name = new Player(databaseHelper, intent.getStringExtra("p1name"));
-        p2Name = new Player(databaseHelper, intent.getStringExtra("p2name"));
+        p1Name = new Player(intent.getStringExtra("p1name"));
+        p2Name = new Player(intent.getStringExtra("p2name"));
 
         p1 = findViewById(R.id.p1);
         p1.setText(p1Name.getName());
@@ -255,10 +254,16 @@ public class GameActivity extends AppCompatActivity {
         if (curCol == col1Score) {
             col1Value -= tTotal;
             curCol.append("\n" + tTotal + " : " + col1Value);
+            if(col1Value < 1){
+                //leg over ================================================================
+            }
             curCol = col2Score;
         } else {
             col2Value -= tTotal;
             curCol.append("\n" + tTotal + " : " + col2Value);
+            if(col2Value < 1){
+                //leg over ================================================================
+            }
             curCol = col1Score;
         }
         tTotal = 0;
