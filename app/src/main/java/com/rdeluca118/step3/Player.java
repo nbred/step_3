@@ -1,7 +1,6 @@
 package com.rdeluca118.step3;
 
 import android.database.sqlite.SQLiteDatabase;
-import android.content.Context;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -14,11 +13,12 @@ public class Player {
     private DatabaseHelper dbHelper;
 
     public Player(DatabaseHelper dbh, String pName) {
-        long r;
 
         name = pName;
         dbHelper = dbh;
-        r = saveToDatabase();
+        if(saveToDatabase() > 0 ){
+            Log.i("Database ", "inserted");
+        }
     }
 
     // method to set the name

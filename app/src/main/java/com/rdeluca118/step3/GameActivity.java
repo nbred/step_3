@@ -177,16 +177,36 @@ public class GameActivity extends AppCompatActivity {
                     curdartview = view;
                     tTotal = darts[1] + darts[2] + darts[3];
                     totView.setText(String.valueOf(tTotal));
+
+                    view =  findViewById(R.id.button_count);
+                    view.setEnabled(false);
+                    view =  findViewById(R.id.button_post);
+                    view.setEnabled(true);
             }
             curdartview.setBackgroundColor(0xFF00FF00);
             dartOrd++;
             haveNumber = false;
-            Button child = findViewById(R.id.button_count);
-            child.setEnabled(false);
+            //Button child = findViewById(R.id.button_count);
+            //child.setEnabled(false);
         }
     }
     public void doReset(View v) {
-        darts[dartOrd] = 0;
+        TextView view;
+
+        darts[1] = 0;
+        darts[2] = 0;
+        darts[3] = 0;
+        dartOrd = 1;
+        view = findViewById(R.id.dart1);
+        view.setBackgroundColor(0x00000000);
+        view.setText("0");
+        view = findViewById(R.id.dart2);
+        view.setBackgroundColor(0x00000000);
+        view.setText("0");
+        view = findViewById(R.id.dart3);
+        view.setBackgroundColor(0x00000000);
+        view.setText("0");
+        totView.setText("0");
         theRadioGroup.clearCheck();
     }
 
@@ -242,6 +262,11 @@ public class GameActivity extends AppCompatActivity {
             curCol = col1Score;
         }
         tTotal = 0;
+
+        view =  findViewById(R.id.button_count);
+        view.setEnabled(true);
+        view =  findViewById(R.id.button_post);
+        view.setEnabled(false);
     }
 
     private void disableEnableControls(boolean enable, ViewGroup vg) {

@@ -12,7 +12,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String TABLE_TURN = "turn";
 
     // Game Table columns
-    public static final String GAME_ID = "_id";
+    public static final String GAME_ID = "id";
     public static final String game_date = "date";
     public static final String game_player1 = "player1_id";
     public static final String game_player2 = "player2_id";
@@ -26,7 +26,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // Player Table columns
 
-    public static final String PLAYER_ID = "_id";
+    public static final String PLAYER_ID = "id";
     public static final String player_name = "name";
 
     // creating player query
@@ -34,7 +34,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + " INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, " + player_name + " VARCHAR(20) NOT NULL UNIQUE);";
 
     // Leg Table columns
-    public static final String LEG_ID = "_id";
+    public static final String LEG_ID = "id";
     public static final String game_id = "game_id";
 
     // creating leg query
@@ -42,7 +42,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + " INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, " + game_id + " INTEGER NOT NULL, FOREIGN KEY('game_id') REFERENCES 'game'('id'));";
 
     // Turn Table columns
-    public static final String TURN_ID = "_id";
+    public static final String TURN_ID = "id";
     public static final String player_id = "player_id";
     public static final String leg_id = "leg_id";
     public static final String dart_one = "dart_1";
@@ -56,7 +56,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // Database Information
     static final String DB_NAME = "darts118";
     // database version
-    static final int DB_VERSION = 1;
+    static final int DB_VERSION = 3;
 
     public DatabaseHelper(Context context){
         super(context,DB_NAME,null,DB_VERSION);
