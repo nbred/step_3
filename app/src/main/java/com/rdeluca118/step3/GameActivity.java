@@ -52,6 +52,7 @@ public class GameActivity extends AppCompatActivity {
         ViewGroup layout = findViewById(R.id.left_pane);
         disableEnableControls(false, layout);
 
+
         theRadioGroup = findViewById(R.id.rg_dt);
 
         col1Score = findViewById(R.id.p1score);

@@ -24,27 +24,27 @@ public class DBManager {
         return this;
     }
 
-    public SQLiteDatabase getBatabase(){
+    public SQLiteDatabase getBatabase() { return database; }
 
-        return database;
-    }
     public void close() {
         dbHelper.close();
     }
-
 
     // =============================================================================================
     // player table operations
     // =============================================================================================
     public void insert_player(String name) {
-       ContentValues contentValue = new ContentValues();
-        contentValue.put(DatabaseHelper.player_name, name);
-        database.insert(DatabaseHelper.TABLE_PLAYER, null, contentValue);
+        long result;
+
+        ContentValues contentValue = new ContentValues();
+        contentValue.put(dbHelper.player_name, name);
+        result = database.insert(dbHelper.TABLE_PLAYER, null, contentValue);
+
     }
 
-    public Cursor fetch() {
-        String[] columns = new String[] { DatabaseHelper.GAME_ID, DatabaseHelper.game_date, DatabaseHelper.game_player1, DatabaseHelper.game_player2 };
-        Cursor cursor = database.query(DatabaseHelper.TABLE_GAME, columns, null, null, null, null, null);
+    public Cursor fetch_players() {
+        String[] columns = new String[]{dbHelper.PLAYER_ID, dbHelper.player_name};
+        Cursor cursor = database.query(dbHelper.TABLE_PLAYER, columns, null, null, null, null, null);
         if (cursor != null) {
             cursor.moveToFirst();
         }

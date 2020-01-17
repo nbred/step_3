@@ -10,7 +10,7 @@ public class Player {
 
         name = pName;
 
-        db.insert_player(name);
+
     }
 
     // method to set the name
