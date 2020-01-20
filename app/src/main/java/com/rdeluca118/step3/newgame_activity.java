@@ -4,13 +4,18 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.SimpleCursorAdapter;
+import android.widget.Spinner;
 import android.content.Intent;
 import android.database.Cursor;
+
 import java.lang.String;
 
 public class newgame_activity extends AppCompatActivity {
     DBManager db;
+    SimpleCursorAdapter sca;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,17 +24,48 @@ public class newgame_activity extends AppCompatActivity {
         db = new DBManager(this);
         db.open();
 
-        EditText  playerList = findViewById(R.id.player_list);
-        Cursor c = db.fetch_players();
-        if(c != null){
-            int i = c.getCount();
-            do {
-                String s = c.getString(c.getColumnIndex("name"));
-                playerList.append(s + '\n');
-            } while( c.moveToNext());
-            c.close();
-        }
-        //db.close();
+        final Cursor mycursor = db.fetch_players();
+
+        String[] from = new String[]{"name"};
+        int[] to = new int[]{android.R.id.text1};
+        SimpleCursorAdapter sca = new SimpleCursorAdapter(this, R.layout.spinner_view, mycursor, from, to, 0);
+
+        Spinner spin1 = this.findViewById(R.id.spinner1);
+        spin1.setAdapter(sca);
+
+        spin1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                EditText p1 = findViewById(R.id.player1Name);
+                p1.setText(mycursor.getString(1));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                EditText p1 = findViewById(R.id.player1Name);
+                p1.setText("");
+            }
+        });
+
+        Spinner spin2 = this.findViewById(R.id.spinner2);
+        spin2.setAdapter(sca);
+
+        spin2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                EditText p2 = findViewById(R.id.player2Name);
+                p2.setText(mycursor.getString(1));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                EditText p2 = findViewById(R.id.player2Name);
+                p2.setText("");
+            }
+        });
+        /*
+        mycursor.close();
+        */
     }
 
     public void startGame(View v) {
