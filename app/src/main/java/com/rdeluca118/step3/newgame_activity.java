@@ -29,6 +29,8 @@ public class newgame_activity extends AppCompatActivity {
         String[] from = new String[]{"name"};
         int[] to = new int[]{android.R.id.text1};
         SimpleCursorAdapter sca = new SimpleCursorAdapter(this, R.layout.spinner_view, mycursor, from, to, 0);
+        //sca.setDropDownViewResource(R.layout.custom_drop_down_spinner_item);
+        //sca.notifyDataSetChanged();
 
         Spinner spin1 = this.findViewById(R.id.spinner1);
         spin1.setAdapter(sca);
