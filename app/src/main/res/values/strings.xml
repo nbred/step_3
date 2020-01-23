@@ -5,6 +5,6 @@
     <string name="player2">Player 2 name</string>
     <string name="p1">Player 1:</string>
     <string name="startgame">Play</string>
-
+    <string name="prompt">Enter player\'s names or select from the lists</string>
 
 </resources>

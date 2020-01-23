@@ -15,7 +15,6 @@ import java.lang.String;
 
 public class newgame_activity extends AppCompatActivity {
     DBManager db;
-    SimpleCursorAdapter sca;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,23 +28,25 @@ public class newgame_activity extends AppCompatActivity {
         String[] from = new String[]{"name"};
         int[] to = new int[]{android.R.id.text1};
         SimpleCursorAdapter sca = new SimpleCursorAdapter(this, R.layout.spinner_view, mycursor, from, to, 0);
-        //sca.setDropDownViewResource(R.layout.custom_drop_down_spinner_item);
-        //sca.notifyDataSetChanged();
 
         Spinner spin1 = this.findViewById(R.id.spinner1);
         spin1.setAdapter(sca);
 
         spin1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            private Boolean changed = false;
+
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                EditText p1 = findViewById(R.id.player1Name);
-                p1.setText(mycursor.getString(1));
+                if (!changed) {
+                    changed = true;
+                } else {
+                    EditText p1 = findViewById(R.id.player1Name);
+                    p1.setText(mycursor.getString(1));
+                }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                EditText p1 = findViewById(R.id.player1Name);
-                p1.setText("");
             }
         });
 
@@ -53,22 +54,23 @@ public class newgame_activity extends AppCompatActivity {
         spin2.setAdapter(sca);
 
         spin2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            private Boolean changed = false;
+
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                EditText p2 = findViewById(R.id.player2Name);
-                p2.setText(mycursor.getString(1));
+                if (!changed) {
+                    changed = true;
+                } else {
+                    EditText p2 = findViewById(R.id.player2Name);
+                    p2.setText(mycursor.getString(1));
+                }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                EditText p2 = findViewById(R.id.player2Name);
-                p2.setText("");
             }
         });
-        /*
-        mycursor.close();
-        */
-    }
+     }
 
     public void startGame(View v) {
 

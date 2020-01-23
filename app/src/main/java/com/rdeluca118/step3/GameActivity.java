@@ -18,8 +18,8 @@ import android.media.AudioManager;
 
 public class GameActivity extends AppCompatActivity {
 
-    private Player p1Name;
-    private Player p2Name;
+    private Player playerOne;
+    private Player playerTwo;
     private Game theGame;
     private int dartOrd, tTotal;
     private int[] darts = {0, 0, 0, 0};
@@ -29,7 +29,8 @@ public class GameActivity extends AppCompatActivity {
     RadioGroup theRadioGroup;
     Context context;
     private boolean haveNumber;
-    private DatabaseHelper databaseHelper;
+//    private DatabaseHelper databaseHelper;
+    DBManager dbm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,21 +38,26 @@ public class GameActivity extends AppCompatActivity {
         setContentView(R.layout.activity_game);
 
         context = this;
+        dbm = new DBManager(this);
+        dbm.open();
 
         Intent intent = getIntent();
-        p1Name = new Player(intent.getStringExtra("p1name"));
-        p2Name = new Player(intent.getStringExtra("p2name"));
+        playerOne = new Player(intent.getStringExtra("p1name"));
+        playerOne.setId(dbm.getPlayerId(playerOne.getName()));
+
+        playerTwo = new Player(intent.getStringExtra("p2name"));
+        playerTwo.setId(dbm.getPlayerId(playerTwo.getName()));
 
         p1 = findViewById(R.id.p1);
-        p1.setText(p1Name.getName());
+        p1.setText(playerOne.getName());
         p2 = findViewById(R.id.p2);
-        p2.setText(p2Name.getName());
+        p2.setText(playerTwo.getName());
 
-        theGame = new Game(p1Name, p2Name, 5);
+        theGame = new Game(playerOne, playerTwo, 5);
+        dbm.insert_game(theGame);
 
         ViewGroup layout = findViewById(R.id.left_pane);
         disableEnableControls(false, layout);
-
 
         theRadioGroup = findViewById(R.id.rg_dt);
 
@@ -63,6 +69,19 @@ public class GameActivity extends AppCompatActivity {
     }
 
     public void numberClicked(View v) {
+
+        //scratch
+        int scratch = v.getId();
+        Button button = findViewById(R.id.button00);
+        int xxx = button.getId();
+        if (xxx == scratch) {
+            darts[dartOrd] = 0;
+            haveNumber = true;
+            Button child = findViewById(R.id.button_count);
+            child.setEnabled(true);
+            return;
+        }
+
         Button b = (Button) v;
         String buttonText = b.getText().toString();
         try {
@@ -85,10 +104,10 @@ public class GameActivity extends AppCompatActivity {
         ViewGroup layout;
 
         TextView etp1 = findViewById(R.id.p1);
-        etp1.setText(p1Name.getName());
+        etp1.setText(playerOne.getName());
 
         TextView etp2 = findViewById(R.id.p2);
-        etp2.setText(p2Name.getName());
+        etp2.setText(playerTwo.getName());
 
         //etp1.setActivated(false);
         etp1.setEnabled(false);
@@ -123,13 +142,6 @@ public class GameActivity extends AppCompatActivity {
 
     public void countShot(View v) {
         TextView view;
-        //scratch
-        int scratch = v.getId();
-        Button button = findViewById(R.id.button00);
-        int xxx = button.getId();
-        if (xxx == scratch) {
-            darts[dartOrd] = 0;
-        }
 
         if (haveNumber) {
             //isDouble = true;

@@ -4,13 +4,9 @@ public class Player {
 
     private String name;
     private int id;
-    private DBManager db;
 
     public Player(String pName) {
-
-        name = pName;
-
-
+        setName(pName);
     }
 
     // method to set the name
@@ -21,6 +17,13 @@ public class Player {
     // method to retrieve the name
     public String getName() {
         return name;
+    }
+
+    public void setId(int aid) {
+        this.id = aid;
+    }
+    public int getId(){
+        return this.id;
     }
 }
 
