@@ -1,28 +1,29 @@
 package com.rdeluca118.step3;
 
 import java.util.Date;
+import java.text.SimpleDateFormat;
 
 public class Game {
 
     private int game_id;
-    private Date Game_date;
+    private String GameDate;
     private Player Player1, Player2;
     private int legs;
 
     public Game(Player p1, Player p2, int maxlegs){
-
+        Date Game_date;
         Player1 = p1;
         Player2 = p2;
 
         legs = maxlegs;
 
         Game_date = new Date();
-//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-//        sdf.format(Game_date);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        GameDate = sdf.format(Game_date);
     }
 
-    public Date getDate(){
-        return Game_date;
+    public String getDate(){
+        return GameDate;
     }
 
     public int[] getPlayersIds(){

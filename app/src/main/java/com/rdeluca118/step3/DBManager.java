@@ -87,7 +87,7 @@ public class DBManager {
 
         int[] p = theGame.getPlayersIds();
         ContentValues contentValue = new ContentValues();
-        contentValue.put(dbHelper.game_date, theGame.getDate().toString());
+        contentValue.put(dbHelper.game_date, theGame.getDate());
         contentValue.put(dbHelper1.game_player1,p[0] );
         contentValue.put(dbHelper1.game_player2,p[1] );
         contentValue.put(dbHelper.game_num_legs, theGame.getNumLegs());
