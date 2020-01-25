@@ -36,4 +36,5 @@ public class Game {
     public void setId(int num){
         game_id = num;
     }
+    public int getId(){return game_id;}
 }

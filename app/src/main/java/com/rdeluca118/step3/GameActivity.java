@@ -21,6 +21,7 @@ public class GameActivity extends AppCompatActivity {
     private Player playerOne;
     private Player playerTwo;
     private Game theGame;
+    private Leg currentLeg;
     private int dartOrd, tTotal;
     private int[] darts = {0, 0, 0, 0};
     private int col1Value, col2Value;
@@ -118,6 +119,9 @@ public class GameActivity extends AppCompatActivity {
         disableEnableControls(true, layout);
         layout = findViewById(R.id.option_pane);
         disableEnableControls(true, layout);
+
+        currentLeg = new Leg(theGame.getId());
+        dbm.insert_leg(currentLeg);
 
         tTotal = 0;
         dartOrd = 1;

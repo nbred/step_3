@@ -98,10 +98,28 @@ public class DBManager {
     // leg table operations
     // =============================================================================================
 
-
+    public void insert_leg(Leg theLeg){
+        ContentValues contentValue = new ContentValues();
+        contentValue.put(dbHelper1.game_id, theLeg.getGameId());
+        theLeg.setId((int)database.insert(dbHelper.TABLE_LEG, null, contentValue));
+    }
     // =============================================================================================
     // turn table operations
     // =============================================================================================
+
+    public void insert_turn(Turn theTurn){
+
+
+
+    }
+
+    // Turn Table columns
+//    public static final String TURN_ID = "_id";
+//    public static final String player_id = "player_id";
+//    public static final String leg_id = "leg_id";
+//    public static final String dart_one = "dart_1";
+//    public static final String dart_two = "dart_2";
+//    public static final String dart_three = "dart_3";
 
 
 
