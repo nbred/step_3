@@ -22,6 +22,8 @@ public class GameActivity extends AppCompatActivity {
     private Player playerTwo;
     private Game theGame;
     private Leg currentLeg;
+    private int currentPlayerId;
+    private Turn currentTurn;
     private int dartOrd, tTotal;
     private int[] darts = {0, 0, 0, 0};
     private int col1Value, col2Value;
@@ -67,6 +69,7 @@ public class GameActivity extends AppCompatActivity {
         curCol = col1Score;
 
         haveNumber = false;
+        currentPlayerId = -1;
     }
 
     public void numberClicked(View v) {
@@ -127,12 +130,18 @@ public class GameActivity extends AppCompatActivity {
         dartOrd = 1;
         col1Value = 501;
         col2Value = 501;
+
         if (startCol == col1Score) {
             curCol = col2Score;
+            currentPlayerId = playerTwo.getId();
         } else {
             curCol = col1Score;
+            if(currentPlayerId > 0) {
+                currentPlayerId = playerOne.getId();
+            }
         }
         startCol = curCol;
+        switchPlayer(v);
     }
 
     public void taskFailed() {
@@ -178,6 +187,7 @@ public class GameActivity extends AppCompatActivity {
                     view.setText(String.valueOf(darts[dartOrd]));
                     curdartview = view;
                     tTotal = darts[1];
+                    currentTurn.setDart(1,darts[1]);
                     totView.setText(String.valueOf(tTotal));
                     break;
                 case 2:
@@ -185,6 +195,7 @@ public class GameActivity extends AppCompatActivity {
                     view.setText(String.valueOf(darts[dartOrd]));
                     curdartview = view;
                     tTotal = darts[1] + darts[2];
+                    currentTurn.setDart(2,darts[2]);
                     totView.setText(String.valueOf(tTotal));
                     break;
                 case 3:
@@ -192,6 +203,7 @@ public class GameActivity extends AppCompatActivity {
                     view.setText(String.valueOf(darts[dartOrd]));
                     curdartview = view;
                     tTotal = darts[1] + darts[2] + darts[3];
+                    currentTurn.setDart(3,darts[3]);
                     totView.setText(String.valueOf(tTotal));
 
                     view =  findViewById(R.id.button_count);
@@ -226,69 +238,65 @@ public class GameActivity extends AppCompatActivity {
         theRadioGroup.clearCheck();
     }
 
-    public void doScratch(View v) {
-        TextView view;
-        switch (dartOrd) {
-            case 1:
-                view = findViewById(R.id.dart1);
-                view.setBackgroundColor(0xFF00FF00);
-                break;
-            case 2:
-                view = findViewById(R.id.dart2);
-                view.setBackgroundColor(0xFF00FF00);
-                break;
-            case 3:
-                view = findViewById(R.id.dart3);
-                view.setBackgroundColor(0xFF00FF00);
-        }
-        darts[dartOrd] = 0;
-        dartOrd++;
-    }
-
     public void doBust(View v) {
         tTotal = 0;
         switchPlayer(v);
     }
 
+   public void doPost(View v){
+       TextView view;
+
+       darts[1] = 0;
+       darts[2] = 0;
+       darts[3] = 0;
+       dartOrd = 1;
+       view = findViewById(R.id.dart1);
+       view.setBackgroundColor(0x00000000);
+       view.setText("0");
+       view = findViewById(R.id.dart2);
+       view.setBackgroundColor(0x00000000);
+       view.setText("0");
+       view = findViewById(R.id.dart3);
+       view.setBackgroundColor(0x00000000);
+       view.setText("0");
+       totView.setText("0");
+
+       if (curCol == col1Score) {
+           col1Value -= tTotal;
+           curCol.append("\n" + tTotal + " : " + col1Value);
+           if(col1Value < 1){
+               //leg over ================================================================
+           }
+           curCol = col2Score;
+       } else {
+           col2Value -= tTotal;
+           curCol.append("\n" + tTotal + " : " + col2Value);
+           if(col2Value < 1){
+               //leg over ================================================================
+           }
+           curCol = col1Score;
+       }
+       tTotal = 0;
+
+       view =  findViewById(R.id.button_count);
+       view.setEnabled(true);
+       view =  findViewById(R.id.button_post);
+       view.setEnabled(false);
+
+       switchPlayer(v);
+   }
     public void switchPlayer(View v) {
-        TextView view;
-
-        darts[1] = 0;
-        darts[2] = 0;
-        darts[3] = 0;
-        dartOrd = 1;
-        view = findViewById(R.id.dart1);
-        view.setBackgroundColor(0x00000000);
-        view.setText("0");
-        view = findViewById(R.id.dart2);
-        view.setBackgroundColor(0x00000000);
-        view.setText("0");
-        view = findViewById(R.id.dart3);
-        view.setBackgroundColor(0x00000000);
-        view.setText("0");
-        totView.setText("0");
-
-        if (curCol == col1Score) {
-            col1Value -= tTotal;
-            curCol.append("\n" + tTotal + " : " + col1Value);
-            if(col1Value < 1){
-                //leg over ================================================================
-            }
-            curCol = col2Score;
-        } else {
-            col2Value -= tTotal;
-            curCol.append("\n" + tTotal + " : " + col2Value);
-            if(col2Value < 1){
-                //leg over ================================================================
-            }
-            curCol = col1Score;
+        if(currentPlayerId == playerOne.getId()){
+            currentPlayerId = playerTwo.getId();
         }
-        tTotal = 0;
+        else {
+            currentPlayerId = playerOne.getId();
+        }
 
-        view =  findViewById(R.id.button_count);
-        view.setEnabled(true);
-        view =  findViewById(R.id.button_post);
-        view.setEnabled(false);
+        if(currentTurn != null) {
+            dbm.insert_turn(currentTurn);
+        }
+        currentTurn = new Turn(currentPlayerId,currentLeg.getLegId());
     }
 
     private void disableEnableControls(boolean enable, ViewGroup vg) {

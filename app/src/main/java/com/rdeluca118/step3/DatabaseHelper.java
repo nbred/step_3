@@ -28,10 +28,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static final String PLAYER_ID = "_id";
     public static final String player_name = "name";
+    public static final String player_wins = "wins";
+    public static final String player_losses = "losses";
 
     // creating player query
     private static final String CREATE_PLAYER_TABLE = "create table " + TABLE_PLAYER + "(" + PLAYER_ID
-            + " INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, " + player_name + " VARCHAR(20) NOT NULL UNIQUE);";
+            + " INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, " + player_name + " VARCHAR(20) NOT NULL UNIQUE, " + player_wins + " INTEGER, " + player_losses + " INTEGER);";
 
     // Leg Table columns
     public static final String LEG_ID = "_id";
@@ -56,7 +58,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // Database Information
     static final String DB_NAME = "darts118";
     // database version
-    static final int DB_VERSION = 4;
+    static final int DB_VERSION = 5;
 
     public DatabaseHelper(Context context){
         super(context,DB_NAME,null,DB_VERSION);

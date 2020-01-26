@@ -1,11 +1,4 @@
 package com.rdeluca118.step3;
-// Turn Table columns
-//public static final String TURN_ID = "_id";
-//public static final String player_id = "player_id";
-//public static final String leg_id = "leg_id";
-//public static final String dart_one = "dart_1";
-//public static final String dart_two = "dart_2";
-//public static final String dart_three = "dart_3";
 
 public class Turn {
     private int turnID;
@@ -20,6 +13,21 @@ public class Turn {
         this.legID = lid;
     }
 
+    public int getPlayerId(){
+        return this.playerID;
+    }
+
+    public int getLegId(){
+        return this.legID;
+    }
+
+    public int[] getDarts(){
+        int[] d = new int[3];
+        d[0] = this.dartOne;
+        d[1] = this.dartTwo;
+        d[2] = this.dartThree;
+        return d;
+    }
     public void setDart(int theDart, int valu) {
         switch (theDart) {
             case 1:

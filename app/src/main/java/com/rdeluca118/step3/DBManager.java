@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
+import org.jetbrains.annotations.NotNull;
+
 public class DBManager {
 
     private DatabaseHelper dbHelper;
@@ -13,7 +15,7 @@ public class DBManager {
     private Context context;
 
     private SQLiteDatabase database;
-    private DatabaseHelper dbHelper1 ;
+    private DatabaseHelper dbHelper1;
 
     public DBManager(Context c) {
         context = c;
@@ -83,45 +85,44 @@ public class DBManager {
     // =============================================================================================
     // game table operations
     // =============================================================================================
-    public void insert_game(Game theGame) {
+    public void insert_game(@NotNull Game theGame) {
 
         int[] p = theGame.getPlayersIds();
         ContentValues contentValue = new ContentValues();
         contentValue.put(dbHelper.game_date, theGame.getDate());
-        contentValue.put(dbHelper1.game_player1,p[0] );
-        contentValue.put(dbHelper1.game_player2,p[1] );
+        contentValue.put(dbHelper1.game_player1, p[0]);
+        contentValue.put(dbHelper1.game_player2, p[1]);
         contentValue.put(dbHelper.game_num_legs, theGame.getNumLegs());
-        theGame.setId((int)database.insert(dbHelper.TABLE_GAME, null, contentValue));
+        theGame.setId((int) database.insert(dbHelper.TABLE_GAME, null, contentValue));
     }
 
     // =============================================================================================
     // leg table operations
     // =============================================================================================
 
-    public void insert_leg(Leg theLeg){
+    public void insert_leg(@NotNull Leg theLeg) {
         ContentValues contentValue = new ContentValues();
         contentValue.put(dbHelper1.game_id, theLeg.getGameId());
-        theLeg.setId((int)database.insert(dbHelper.TABLE_LEG, null, contentValue));
+        theLeg.setId((int) database.insert(dbHelper.TABLE_LEG, null, contentValue));
     }
     // =============================================================================================
     // turn table operations
     // =============================================================================================
 
-    public void insert_turn(Turn theTurn){
+    public void insert_turn(@org.jetbrains.annotations.NotNull Turn theTurn) {
+        int[] darts = theTurn.getDarts();
 
-
-
+        ContentValues contentValue = new ContentValues();
+        contentValue.put(dbHelper.player_id, theTurn.getPlayerId());
+        contentValue.put(dbHelper.leg_id, theTurn.getLegId());
+        contentValue.put(dbHelper.dart_one, darts[0]);
+        contentValue.put(dbHelper.dart_two, darts[1]);
+        contentValue.put(dbHelper.dart_three, darts[2]);
+        database.insert(dbHelper.TABLE_TURN, null, contentValue);
     }
 
-    // Turn Table columns
-//    public static final String TURN_ID = "_id";
-//    public static final String player_id = "player_id";
-//    public static final String leg_id = "leg_id";
-//    public static final String dart_one = "dart_1";
-//    public static final String dart_two = "dart_2";
-//    public static final String dart_three = "dart_3";
-
-
+    // =============================================================================================
+    // =============================================================================================
 
     public int update(long _id, String name, String desc) {
 //        ContentValues contentValues = new ContentValues();
