@@ -243,6 +243,11 @@ public class GameActivity extends AppCompatActivity {
         switchPlayer(v);
     }
 
+    public void postFinish(View v){
+        //currentLeg.setWinnerId(currentPlayerId);
+        int r = dbm.update_leg(currentLeg.getLegId(), currentPlayerId);
+    }
+
    public void doPost(View v){
        TextView view;
 
@@ -264,15 +269,17 @@ public class GameActivity extends AppCompatActivity {
        if (curCol == col1Score) {
            col1Value -= tTotal;
            curCol.append("\n" + tTotal + " : " + col1Value);
-           if(col1Value < 1){
+           if(col1Value == 0){
                //leg over ================================================================
+               postFinish(v);
            }
            curCol = col2Score;
        } else {
            col2Value -= tTotal;
            curCol.append("\n" + tTotal + " : " + col2Value);
-           if(col2Value < 1){
+           if(col2Value == 0){
                //leg over ================================================================
+               postFinish(v);
            }
            curCol = col1Score;
        }

@@ -3,6 +3,7 @@ package com.rdeluca118.step3;
 public class Leg {
     private int legID;
     private int gameID;
+    private int winnerID;
 
     public Leg(int gameid) {
         this.gameID = gameid;
@@ -18,5 +19,8 @@ public class Leg {
 
     public int getLegId() {
         return this.legID;
+    }
+    public void setWinnerId(int w) {
+        this.winnerID = w;
     }
 }

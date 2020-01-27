@@ -103,8 +103,17 @@ public class DBManager {
     public void insert_leg(@NotNull Leg theLeg) {
         ContentValues contentValue = new ContentValues();
         contentValue.put(dbHelper1.game_id, theLeg.getGameId());
+        contentValue.put(dbHelper1.winner_id, 0);
         theLeg.setId((int) database.insert(dbHelper.TABLE_LEG, null, contentValue));
     }
+
+    public int update_leg(int _id, int winner) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DatabaseHelper.winner_id, winner);
+        int i = database.update(DatabaseHelper.TABLE_LEG, contentValues, DatabaseHelper.LEG_ID + " = " + _id, null);
+        return i;
+    }
+
     // =============================================================================================
     // turn table operations
     // =============================================================================================

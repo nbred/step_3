@@ -38,10 +38,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // Leg Table columns
     public static final String LEG_ID = "_id";
     public static final String game_id = "game_id";
+    public static final String winner_id = "winner";
+
 
     // creating leg query
     private static final String CREATE_LEG_TABLE = "create table " + TABLE_LEG + "(" + LEG_ID
-            + " INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, " + game_id + " INTEGER NOT NULL, FOREIGN KEY('game_id') REFERENCES 'game'('id'));";
+            + " INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, " + game_id + " INTEGER NOT NULL, " + winner_id + " INTEGER, FOREIGN KEY('game_id') REFERENCES 'game'('_id'));";
 
     // Turn Table columns
     public static final String TURN_ID = "_id";
@@ -53,12 +55,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // creating leg query
     private static final String CREATE_TURN_TABLE = "create table " + TABLE_TURN + "(" + TURN_ID
-            + " INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, " + player_id + " INTEGER NOT NULL, " + leg_id + " INTEGER NOT NULL, " + dart_one + " INTEGER, " + dart_two + " INTEGER, " + dart_three + " INTEGER, FOREIGN KEY('leg_id') REFERENCES 'leg'('id'), FOREIGN KEY('player_id') REFERENCES 'player'('id'));";
+            + " INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, " + player_id + " INTEGER NOT NULL, " + leg_id + " INTEGER NOT NULL, " + dart_one + " INTEGER, " + dart_two + " INTEGER, " + dart_three + " INTEGER, FOREIGN KEY('leg_id') REFERENCES 'leg'('_id'), FOREIGN KEY('player_id') REFERENCES 'player'('_id'));";
 
     // Database Information
     static final String DB_NAME = "darts118";
     // database version
-    static final int DB_VERSION = 5;
+    static final int DB_VERSION = 6;
 
     public DatabaseHelper(Context context){
         super(context,DB_NAME,null,DB_VERSION);
