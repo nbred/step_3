@@ -2,6 +2,7 @@ package com.rdeluca118.step3;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.RadioGroup;
@@ -27,13 +28,14 @@ public class GameActivity extends AppCompatActivity {
     private int dartOrd, tTotal;
     private int[] darts = {0, 0, 0, 0};
     private int col1Value, col2Value;
-    TextView totView, p1, p2, curdartview;
-    TextView col1Score, col2Score, curCol, startCol;
-    RadioGroup theRadioGroup;
-    Context context;
+    private TextView totView, p1, p2, curdartview;
+    private TextView col1Score, col2Score, curCol, startCol;
+    private RadioGroup theRadioGroup;
+    private Context context;
     private boolean haveNumber;
-//    private DatabaseHelper databaseHelper;
-    DBManager dbm;
+    private DBManager dbm;
+    private String[] finishes;
+    private int maxLegs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +46,9 @@ public class GameActivity extends AppCompatActivity {
         dbm = new DBManager(this);
         dbm.open();
 
+        Resources res = getResources();
+        finishes = res.getStringArray(R.array.finishes);
+
         Intent intent = getIntent();
         playerOne = new Player(intent.getStringExtra("p1name"));
         playerOne.setId(dbm.getPlayerId(playerOne.getName()));
@@ -51,12 +56,14 @@ public class GameActivity extends AppCompatActivity {
         playerTwo = new Player(intent.getStringExtra("p2name"));
         playerTwo.setId(dbm.getPlayerId(playerTwo.getName()));
 
+        maxLegs = intent.getIntExtra("typesel", 1);
+
         p1 = findViewById(R.id.p1);
         p1.setText(playerOne.getName());
         p2 = findViewById(R.id.p2);
         p2.setText(playerTwo.getName());
 
-        theGame = new Game(playerOne, playerTwo, 5);
+        theGame = new Game(playerOne, playerTwo, maxLegs);
         dbm.insert_game(theGame);
 
         ViewGroup layout = findViewById(R.id.left_pane);
@@ -244,7 +251,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     public void postFinish(View v){
-        //currentLeg.setWinnerId(currentPlayerId);
+
         int r = dbm.update_leg(currentLeg.getLegId(), currentPlayerId);
     }
 

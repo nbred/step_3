@@ -2,6 +2,7 @@ package com.rdeluca118.step3;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -14,14 +15,20 @@ import android.database.Cursor;
 import java.lang.String;
 
 public class newgame_activity extends AppCompatActivity {
-    DBManager db;
+    private DBManager db;
+    private String curType;
+    private int typeSel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_newgame_activity);
+
         db = new DBManager(this);
         db.open();
+
+//        Resources res = getResources();
+//        types = res.getStringArray(R.array.game_type);
 
         final Cursor mycursor = db.fetch_players();
 
@@ -66,11 +73,25 @@ public class newgame_activity extends AppCompatActivity {
                 }
             }
 
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-     }
+
+        final Spinner gType = this.findViewById(R.id.game_legs);
+        gType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                curType = parent.getItemAtPosition(position).toString();
+                typeSel= position;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+    }
 
     public void startGame(View v) {
 
@@ -85,6 +106,8 @@ public class newgame_activity extends AppCompatActivity {
         Intent i = new Intent(this, GameActivity.class);
         i.putExtra("p1name", p1name);
         i.putExtra("p2name", p2name);
+        i.putExtra("typesel", typeSel);
+
         startActivity(i);
     }
 }

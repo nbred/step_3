@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-
 import org.jetbrains.annotations.NotNull;
 
 public class DBManager {
@@ -118,7 +117,7 @@ public class DBManager {
     // turn table operations
     // =============================================================================================
 
-    public void insert_turn(@org.jetbrains.annotations.NotNull Turn theTurn) {
+    public void insert_turn(@NotNull Turn theTurn) {
         int[] darts = theTurn.getDarts();
 
         ContentValues contentValue = new ContentValues();

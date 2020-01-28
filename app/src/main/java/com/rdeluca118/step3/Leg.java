@@ -7,6 +7,7 @@ public class Leg {
 
     public Leg(int gameid) {
         this.gameID = gameid;
+        this.winnerID = -1;
     }
 
     public int getGameId() {

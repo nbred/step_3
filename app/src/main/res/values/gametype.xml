@@ -3,5 +3,11 @@
     <string-array name="game_type">
         <item>One Game</item>
         <item>2 of 3</item>
+        <item>3 of 5</item>
+        <item>4 of 7</item>
+        <item>5 of 9</item>
+        <item>6 of 11</item>
+        <item>7 of 13</item>
+        <item>8 of 15</item>
     </string-array>
 </resources>
