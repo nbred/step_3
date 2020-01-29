@@ -36,6 +36,7 @@ public class GameActivity extends AppCompatActivity {
     private DBManager dbm;
     private String[] finishes;
     private int maxLegs;
+    private int legsPlayed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +78,7 @@ public class GameActivity extends AppCompatActivity {
 
         haveNumber = false;
         currentPlayerId = -1;
+        legsPlayed = 0;
     }
 
     public void numberClicked(View v) {
@@ -143,10 +145,13 @@ public class GameActivity extends AppCompatActivity {
             currentPlayerId = playerTwo.getId();
         } else {
             curCol = col1Score;
-            if(currentPlayerId > 0) {
+            if (currentPlayerId > 0) {
                 currentPlayerId = playerOne.getId();
             }
         }
+        currentLeg.setHammer(currentPlayerId);
+// ============================================================================================
+
         startCol = curCol;
         switchPlayer(v);
     }
@@ -194,7 +199,7 @@ public class GameActivity extends AppCompatActivity {
                     view.setText(String.valueOf(darts[dartOrd]));
                     curdartview = view;
                     tTotal = darts[1];
-                    currentTurn.setDart(1,darts[1]);
+                    currentTurn.setDart(1, darts[1]);
                     totView.setText(String.valueOf(tTotal));
                     break;
                 case 2:
@@ -202,7 +207,7 @@ public class GameActivity extends AppCompatActivity {
                     view.setText(String.valueOf(darts[dartOrd]));
                     curdartview = view;
                     tTotal = darts[1] + darts[2];
-                    currentTurn.setDart(2,darts[2]);
+                    currentTurn.setDart(2, darts[2]);
                     totView.setText(String.valueOf(tTotal));
                     break;
                 case 3:
@@ -210,12 +215,12 @@ public class GameActivity extends AppCompatActivity {
                     view.setText(String.valueOf(darts[dartOrd]));
                     curdartview = view;
                     tTotal = darts[1] + darts[2] + darts[3];
-                    currentTurn.setDart(3,darts[3]);
+                    currentTurn.setDart(3, darts[3]);
                     totView.setText(String.valueOf(tTotal));
 
-                    view =  findViewById(R.id.button_count);
+                    view = findViewById(R.id.button_count);
                     view.setEnabled(false);
-                    view =  findViewById(R.id.button_post);
+                    view = findViewById(R.id.button_post);
                     view.setEnabled(true);
             }
             curdartview.setBackgroundColor(0xFF00FF00);
@@ -225,6 +230,7 @@ public class GameActivity extends AppCompatActivity {
             //child.setEnabled(false);
         }
     }
+
     public void doReset(View v) {
         TextView view;
 
@@ -241,7 +247,11 @@ public class GameActivity extends AppCompatActivity {
         view = findViewById(R.id.dart3);
         view.setBackgroundColor(0x00000000);
         view.setText("0");
+
+        totView = findViewById(R.id.turn);
         totView.setText("0");
+
+        findViewById(R.id.rg_dt);
         theRadioGroup.clearCheck();
     }
 
@@ -250,67 +260,105 @@ public class GameActivity extends AppCompatActivity {
         switchPlayer(v);
     }
 
-    public void postFinish(View v){
+    public void postFinish(View v) {
+        int l = theGame.getNumLegs();
+        legsPlayed++;
+        if(l > legsPlayed){
+            doReset(v);
 
+        }
         int r = dbm.update_leg(currentLeg.getLegId(), currentPlayerId);
     }
 
-   public void doPost(View v){
-       TextView view;
+    public void doPost(View v) {
+        TextView view;
 
-       darts[1] = 0;
-       darts[2] = 0;
-       darts[3] = 0;
-       dartOrd = 1;
-       view = findViewById(R.id.dart1);
-       view.setBackgroundColor(0x00000000);
-       view.setText("0");
-       view = findViewById(R.id.dart2);
-       view.setBackgroundColor(0x00000000);
-       view.setText("0");
-       view = findViewById(R.id.dart3);
-       view.setBackgroundColor(0x00000000);
-       view.setText("0");
-       totView.setText("0");
+        darts[1] = 0;
+        darts[2] = 0;
+        darts[3] = 0;
+        dartOrd = 1;
+        view = findViewById(R.id.dart1);
+        view.setBackgroundColor(0x00000000);
+        view.setText("0");
+        view = findViewById(R.id.dart2);
+        view.setBackgroundColor(0x00000000);
+        view.setText("0");
+        view = findViewById(R.id.dart3);
+        view.setBackgroundColor(0x00000000);
+        view.setText("0");
+        totView = findViewById(R.id.turn);
+        totView.setText("0");
 
-       if (curCol == col1Score) {
-           col1Value -= tTotal;
-           curCol.append("\n" + tTotal + " : " + col1Value);
-           if(col1Value == 0){
-               //leg over ================================================================
-               postFinish(v);
-           }
-           curCol = col2Score;
-       } else {
-           col2Value -= tTotal;
-           curCol.append("\n" + tTotal + " : " + col2Value);
-           if(col2Value == 0){
-               //leg over ================================================================
-               postFinish(v);
-           }
-           curCol = col1Score;
-       }
-       tTotal = 0;
+        if (curCol == col1Score) {
+            col1Value -= tTotal;
+            curCol.append("\n" + tTotal + " : " + col1Value);
+            if (col1Value == 0) {
+                //leg over ================================================================
+                postFinish(v);
+            }
+            curCol = col2Score;
+        } else {
+            col2Value -= tTotal;
+            curCol.append("\n" + tTotal + " : " + col2Value);
+            if (col2Value == 0) {
+                //leg over ================================================================
+                postFinish(v);
+            }
+            curCol = col1Score;
+        }
+        tTotal = 0;
 
-       view =  findViewById(R.id.button_count);
-       view.setEnabled(true);
-       view =  findViewById(R.id.button_post);
-       view.setEnabled(false);
+        view = findViewById(R.id.button_count);
+        view.setEnabled(true);
+        view = findViewById(R.id.button_post);
+        view.setEnabled(false);
 
-       switchPlayer(v);
-   }
+        switchPlayer(v);
+    }
+
     public void switchPlayer(View v) {
-        if(currentPlayerId == playerOne.getId()){
-            currentPlayerId = playerTwo.getId();
-        }
-        else {
-            currentPlayerId = playerOne.getId();
-        }
+        String checkOut;
+        TextView pNmae;
+        TextView old;
 
-        if(currentTurn != null) {
+        if (currentPlayerId == playerOne.getId()) {
+            currentPlayerId = playerTwo.getId();
+            checkOut = canCheckOut(col2Value);
+            old = findViewById(R.id.p1);
+            old.setBackgroundResource(0);
+            pNmae = findViewById(R.id.p2);
+
+        } else {
+            currentPlayerId = playerOne.getId();
+            checkOut = canCheckOut(col1Value);
+            old = findViewById(R.id.p2);
+            old.setBackgroundResource(0);
+            pNmae = findViewById(R.id.p1);
+        }
+        pNmae.setBackgroundResource(R.color.colorAccent);
+
+        if (currentTurn != null) {
             dbm.insert_turn(currentTurn);
         }
-        currentTurn = new Turn(currentPlayerId,currentLeg.getLegId());
+        currentTurn = new Turn(currentPlayerId, currentLeg.getLegId());
+
+        TextView checkout = findViewById(R.id.tofinish);
+        checkout.setText(checkOut);
+    }
+
+    private String canCheckOut(int score) {
+        String result;
+        int base = 170;
+        result = "";
+
+        if (score <= base) {
+            int c = finishes.length;
+            int i = (base - c) + 1;
+            if (score > i) {
+                result = finishes[score - i];
+            }
+        }
+        return result;
     }
 
     private void disableEnableControls(boolean enable, ViewGroup vg) {

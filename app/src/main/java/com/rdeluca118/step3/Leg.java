@@ -4,6 +4,7 @@ public class Leg {
     private int legID;
     private int gameID;
     private int winnerID;
+    private int hammer;
 
     public Leg(int gameid) {
         this.gameID = gameid;
@@ -21,7 +22,20 @@ public class Leg {
     public int getLegId() {
         return this.legID;
     }
-    public void setWinnerId(int w) {
-        this.winnerID = w;
+
+    public int getHammer() {
+        return hammer;
+    }
+
+    public void setHammer(int hammer) {
+        this.hammer = hammer;
+    }
+
+    public int getWinnerID() {
+        return winnerID;
+    }
+
+    public void setWinnerID(int winnerID) {
+        this.winnerID = winnerID;
     }
 }
