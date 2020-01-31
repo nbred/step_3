@@ -7,4 +7,6 @@
     <string name="prompt">Enter player\'s names or select from the lists</string>
     <string name="seltype">Select match type</string>
     <string name="selplayers">Select players</string>
+
+    <string name="leg_message">Leg %1d of %2d</string>
 </resources>

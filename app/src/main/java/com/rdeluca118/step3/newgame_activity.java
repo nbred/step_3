@@ -84,7 +84,7 @@ public class newgame_activity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 curType = parent.getItemAtPosition(position).toString();
-                typeSel= position;
+                typeSel = position;
             }
 
             @Override
@@ -94,6 +94,7 @@ public class newgame_activity extends AppCompatActivity {
     }
 
     public void startGame(View v) {
+        int max;
 
         EditText p1 = findViewById(R.id.player1Name);
         String p1name = p1.getText().toString();
@@ -103,10 +104,36 @@ public class newgame_activity extends AppCompatActivity {
         this.db.insert_player(p1name);
         this.db.insert_player(p2name);
 
+        switch (typeSel) {
+            case 1:
+                max = 3;
+                break;
+            case 2:
+                max = 5;
+                break;
+            case 3:
+                max = 7;
+                break;
+            case 4:
+                max = 9;
+                break;
+            case 5:
+                max = 11;
+                break;
+            case 6:
+                max = 13;
+                break;
+            case 7:
+                max = 15;
+                break;
+            default:
+                max = 1;
+        }
+
         Intent i = new Intent(this, GameActivity.class);
         i.putExtra("p1name", p1name);
         i.putExtra("p2name", p2name);
-        i.putExtra("typesel", typeSel);
+        i.putExtra("typesel", max);
 
         startActivity(i);
     }

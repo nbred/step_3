@@ -28,22 +28,22 @@ public class GameActivity extends AppCompatActivity {
     private int dartOrd, tTotal;
     private int[] darts = {0, 0, 0, 0};
     private int col1Value, col2Value;
-    private TextView totView, p1, p2, curdartview;
-    private TextView col1Score, col2Score, curCol, startCol;
+    private TextView totView, p1, p2, curdartview, legsView;
+    private TextView col1Score, col2Score, curCol;
     private RadioGroup theRadioGroup;
-    private Context context;
     private boolean haveNumber;
     private DBManager dbm;
     private String[] finishes;
     private int maxLegs;
     private int legsPlayed;
+    private int turnCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
-        context = this;
+        //context = this;
         dbm = new DBManager(this);
         dbm.open();
 
@@ -63,9 +63,14 @@ public class GameActivity extends AppCompatActivity {
         p1.setText(playerOne.getName());
         p2 = findViewById(R.id.p2);
         p2.setText(playerTwo.getName());
+        p1.setEnabled(false);
+        p2.setEnabled(false);
 
         theGame = new Game(playerOne, playerTwo, maxLegs);
         dbm.insert_game(theGame);
+
+        legsView = findViewById(R.id.leg_text);
+        legsView.setText("Best of " + String.valueOf(maxLegs));
 
         ViewGroup layout = findViewById(R.id.left_pane);
         disableEnableControls(false, layout);
@@ -74,7 +79,8 @@ public class GameActivity extends AppCompatActivity {
 
         col1Score = findViewById(R.id.p1score);
         col2Score = findViewById(R.id.p2score);
-        curCol = col1Score;
+        curCol = col2Score;
+        //curCol = col1Score;
 
         haveNumber = false;
         currentPlayerId = -1;
@@ -110,27 +116,20 @@ public class GameActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        Button b1 = findViewById(R.id.button_Finish);
+        b1.setEnabled(false);
     }
 
     public void doNewLeg(View v) {
-
         ViewGroup layout;
-
-        TextView etp1 = findViewById(R.id.p1);
-        etp1.setText(playerOne.getName());
-
-        TextView etp2 = findViewById(R.id.p2);
-        etp2.setText(playerTwo.getName());
-
-        //etp1.setActivated(false);
-        etp1.setEnabled(false);
-        //etp2.setActivated(false);
-        etp2.setEnabled(false);
+        View view;
+        TextView pName;
 
         layout = findViewById(R.id.left_pane);
         disableEnableControls(true, layout);
-        layout = findViewById(R.id.option_pane);
-        disableEnableControls(true, layout);
+        //layout = findViewById(R.id.option_pane);
+        //disableEnableControls(true, layout);
 
         currentLeg = new Leg(theGame.getId());
         dbm.insert_leg(currentLeg);
@@ -139,22 +138,43 @@ public class GameActivity extends AppCompatActivity {
         dartOrd = 1;
         col1Value = 501;
         col2Value = 501;
+        turnCount = 0;
 
-        if (startCol == col1Score) {
-            curCol = col2Score;
-            currentPlayerId = playerTwo.getId();
-        } else {
+//        if (startCol == col1Score) {
+//            curCol = col2Score;
+//            currentPlayerId = playerTwo.getId();
+//        } else {
+//            curCol = col1Score;
+//            if (currentPlayerId > 0) {
+//                currentPlayerId = playerOne.getId();
+//            }
+//        }
+        view = findViewById(R.id.button_count);
+        view.setEnabled(true);
+        view = findViewById(R.id.button_post);
+        view.setEnabled(false);
+
+        legsPlayed++;
+        if (legsPlayed % 2 > 0) {     // odd leg
+            currentPlayerId = playerOne.getId();
             curCol = col1Score;
-            if (currentPlayerId > 0) {
-                currentPlayerId = playerOne.getId();
-            }
+            pName = findViewById(R.id.p1);
+        } else {                      // even leg
+            currentPlayerId = playerTwo.getId();
+            curCol = col2Score;
+            pName = findViewById(R.id.p1);
         }
+        pName.setBackgroundResource(R.color.colorAccent);
         currentLeg.setHammer(currentPlayerId);
-// ============================================================================================
 
-        startCol = curCol;
-        switchPlayer(v);
+        Resources res = getResources();
+        String text = res.getString(R.string.leg_message, legsPlayed, maxLegs);
+        legsView.setText(text);
+
+        currentTurn = new Turn(currentPlayerId, currentLeg.getLegId());
+        //switchPlayer(v);
     }
+
 
     public void taskFailed() {
         Toast.makeText(getApplicationContext(),
@@ -251,6 +271,9 @@ public class GameActivity extends AppCompatActivity {
         totView = findViewById(R.id.turn);
         totView.setText("0");
 
+        col1Score.setText("501");
+        col2Score.setText("501");
+
         findViewById(R.id.rg_dt);
         theRadioGroup.clearCheck();
     }
@@ -261,13 +284,22 @@ public class GameActivity extends AppCompatActivity {
     }
 
     public void postFinish(View v) {
-        int l = theGame.getNumLegs();
-        legsPlayed++;
-        if(l > legsPlayed){
-            doReset(v);
+        TextView view;
 
+        int maxLegs = theGame.getNumLegs();
+        //legsPlayed++;
+        if (maxLegs >= legsPlayed) {
+            doReset(v);
+        } else {
+            //GAME OVER
         }
+
         int r = dbm.update_leg(currentLeg.getLegId(), currentPlayerId);
+
+        view = findViewById(R.id.p1);
+        view.setBackgroundResource(0);
+        view = findViewById(R.id.p2);
+        view.setBackgroundResource(0);
     }
 
     public void doPost(View v) {
@@ -294,26 +326,37 @@ public class GameActivity extends AppCompatActivity {
             curCol.append("\n" + tTotal + " : " + col1Value);
             if (col1Value == 0) {
                 //leg over ================================================================
-                postFinish(v);
+                enableFinish();
             }
-            curCol = col2Score;
         } else {
             col2Value -= tTotal;
             curCol.append("\n" + tTotal + " : " + col2Value);
             if (col2Value == 0) {
                 //leg over ================================================================
-                postFinish(v);
+                enableFinish();
             }
-            curCol = col1Score;
         }
         tTotal = 0;
 
-        view = findViewById(R.id.button_count);
-        view.setEnabled(true);
-        view = findViewById(R.id.button_post);
-        view.setEnabled(false);
+        if (col1Value > 0 && col2Value > 0) {
+            view = findViewById(R.id.button_count);
+            view.setEnabled(true);
+            view = findViewById(R.id.button_post);
+            view.setEnabled(false);
+        }
 
         switchPlayer(v);
+    }
+
+    private void enableFinish() {
+        View view;
+
+        view = findViewById(R.id.button_count);
+        view.setEnabled(false);
+        view = findViewById(R.id.button_post);
+        view.setEnabled(false);
+        Button b = findViewById(R.id.button_Finish);
+        b.setEnabled(true);
     }
 
     public void switchPlayer(View v) {
@@ -321,20 +364,23 @@ public class GameActivity extends AppCompatActivity {
         TextView pNmae;
         TextView old;
 
-        if (currentPlayerId == playerOne.getId()) {
-            currentPlayerId = playerTwo.getId();
-            checkOut = canCheckOut(col2Value);
-            old = findViewById(R.id.p1);
-            old.setBackgroundResource(0);
-            pNmae = findViewById(R.id.p2);
-
-        } else {
+        turnCount++;
+        // ###############################################################
+        if (curCol == col2Score) {
+            curCol = col1Score;
             currentPlayerId = playerOne.getId();
             checkOut = canCheckOut(col1Value);
-            old = findViewById(R.id.p2);
-            old.setBackgroundResource(0);
             pNmae = findViewById(R.id.p1);
+            old = findViewById(R.id.p2);
+        } else {
+            curCol = col2Score;
+            currentPlayerId = playerTwo.getId();
+            checkOut = canCheckOut(col2Value);
+            pNmae = findViewById(R.id.p2);
+            old = findViewById(R.id.p1);
         }
+
+        old.setBackgroundResource(0);
         pNmae.setBackgroundResource(R.color.colorAccent);
 
         if (currentTurn != null) {
@@ -371,11 +417,21 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
+    private void doCleanUp() {
+//        private Game theGame;
+//        private Leg currentLeg;
+//        private Turn currentTurn;
+        dbm.update_leg(currentLeg.getLegId(), -1);
+
+    }
+
     public void shutDown(View v) {
-        Intent homeIntent = new Intent(Intent.ACTION_MAIN);
-        homeIntent.addCategory(Intent.CATEGORY_HOME);
-        homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        doCleanUp();
+        Intent homeIntent = new Intent(this, MainActivity.class);
         startActivity(homeIntent);
     }
 }
 
+//        Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+//        homeIntent.addCategory(Intent.CATEGORY_HOME);
+//        homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

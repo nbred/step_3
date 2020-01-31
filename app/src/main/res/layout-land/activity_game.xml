@@ -431,10 +431,19 @@
                 android:paddingTop="6dp"
                 android:text="Finish"
                 android:textAlignment="center"
-                android:textSize="18sp"
+                android:textColor="#FA3706"
+                android:textSize="30sp"
                 tools:textStyle="bold" />
 
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/leg_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="legs"
+            android:textAlignment="center"
+            android:textSize="24sp" />
     </LinearLayout>
 
     <LinearLayout
