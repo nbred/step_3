@@ -28,7 +28,7 @@ public class GameActivity extends AppCompatActivity {
     private int dartOrd, tTotal;
     private int[] darts = {0, 0, 0, 0};
     private int col1Value, col2Value;
-    private TextView totView, p1, p2, curdartview, legsView;
+    private TextView totView, curdartview, legsView;
     private TextView col1Score, col2Score, curCol;
     private RadioGroup theRadioGroup;
     private boolean haveNumber;
@@ -40,6 +40,7 @@ public class GameActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        TextView p1,p2;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
@@ -70,7 +71,7 @@ public class GameActivity extends AppCompatActivity {
         dbm.insert_game(theGame);
 
         legsView = findViewById(R.id.leg_text);
-        legsView.setText("Best of " + String.valueOf(maxLegs));
+        legsView.setText("Best of " + maxLegs);
 
         ViewGroup layout = findViewById(R.id.left_pane);
         disableEnableControls(false, layout);
@@ -80,7 +81,6 @@ public class GameActivity extends AppCompatActivity {
         col1Score = findViewById(R.id.p1score);
         col2Score = findViewById(R.id.p2score);
         curCol = col2Score;
-        //curCol = col1Score;
 
         haveNumber = false;
         currentPlayerId = -1;
@@ -128,8 +128,6 @@ public class GameActivity extends AppCompatActivity {
 
         layout = findViewById(R.id.left_pane);
         disableEnableControls(true, layout);
-        //layout = findViewById(R.id.option_pane);
-        //disableEnableControls(true, layout);
 
         currentLeg = new Leg(theGame.getId());
         dbm.insert_leg(currentLeg);
@@ -140,15 +138,6 @@ public class GameActivity extends AppCompatActivity {
         col2Value = 501;
         turnCount = 0;
 
-//        if (startCol == col1Score) {
-//            curCol = col2Score;
-//            currentPlayerId = playerTwo.getId();
-//        } else {
-//            curCol = col1Score;
-//            if (currentPlayerId > 0) {
-//                currentPlayerId = playerOne.getId();
-//            }
-//        }
         view = findViewById(R.id.button_count);
         view.setEnabled(true);
         view = findViewById(R.id.button_post);
@@ -172,7 +161,6 @@ public class GameActivity extends AppCompatActivity {
         legsView.setText(text);
 
         currentTurn = new Turn(currentPlayerId, currentLeg.getLegId());
-        //switchPlayer(v);
     }
 
 
@@ -246,8 +234,6 @@ public class GameActivity extends AppCompatActivity {
             curdartview.setBackgroundColor(0xFF00FF00);
             dartOrd++;
             haveNumber = false;
-            //Button child = findViewById(R.id.button_count);
-            //child.setEnabled(false);
         }
     }
 
