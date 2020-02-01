@@ -17,10 +17,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String game_player1 = "player1_id";
     public static final String game_player2 = "player2_id";
     public static final String game_num_legs = "max_legs";
+    public static final String game_winner = "winner";
 
     // Creating game query
     private static final String CREATE_GAME_TABLE = "create table " + TABLE_GAME + "(" + GAME_ID
-            + " INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, " + game_date + " DATETIME NOT NULL, " + game_player1 + " INTEGER NOT NULL, "  + game_player2 + " INTEGER NOT NULL, " + game_num_legs + " INTEGER);";
+            + " INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, " + game_date + " DATETIME NOT NULL, " + game_player1 + " INTEGER NOT NULL, "  + game_player2 + " INTEGER NOT NULL, " + game_num_legs + " INTEGER, " + game_winner + " INTEGER);";
 
     private static final String CREATE_GAME_INDEX ="CREATE INDEX 'date_idx' ON '" + TABLE_GAME +"' ('"+ game_date + "' ASC)";
 
@@ -60,7 +61,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // Database Information
     static final String DB_NAME = "darts118";
     // database version
-    static final int DB_VERSION = 6;
+    static final int DB_VERSION = 7;
 
     public DatabaseHelper(Context context){
         super(context,DB_NAME,null,DB_VERSION);

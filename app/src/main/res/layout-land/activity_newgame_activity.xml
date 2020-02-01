@@ -90,6 +90,18 @@
         app:layout_constraintStart_toStartOf="@+id/player2Name"
         app:layout_constraintTop_toBottomOf="@+id/player2Name" />
 
+    <Button
+        android:id="@+id/button_quit"
+        android:layout_width="88dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="120dp"
+        android:onClick="doQuit"
+        android:text="@string/quit"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintStart_toStartOf="@+id/player2Name"
+        app:layout_constraintTop_toBottomOf="@+id/player2Name" />
+
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
         android:layout_width="wrap_content"

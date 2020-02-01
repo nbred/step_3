@@ -40,7 +40,7 @@ public class GameActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        TextView p1,p2;
+        TextView p1, p2;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
@@ -182,7 +182,6 @@ public class GameActivity extends AppCompatActivity {
             if (doubleOpt.isChecked()) {
                 int x = darts[dartOrd] * 2;
                 darts[dartOrd] = x;
-                theRadioGroup.clearCheck();
             }
 
             //isTriple = true;
@@ -191,14 +190,13 @@ public class GameActivity extends AppCompatActivity {
                 if (darts[dartOrd] == 25) {
                     // no TRIPLE 25
                     taskFailed();
-                    theRadioGroup.clearCheck();
                 } else {
                     int x = darts[dartOrd] * 3;
                     darts[dartOrd] = x;
-                    theRadioGroup.clearCheck();
+
                 }
             }
-
+            theRadioGroup.clearCheck();
             totView = findViewById(R.id.turn);
 
             switch (dartOrd) {
@@ -262,30 +260,47 @@ public class GameActivity extends AppCompatActivity {
 
         findViewById(R.id.rg_dt);
         theRadioGroup.clearCheck();
+
+        ViewGroup layout = findViewById(R.id.left_pane);
+        disableEnableControls(false, layout);
     }
 
     public void doBust(View v) {
-        tTotal = 0;
         switchPlayer(v);
     }
 
     public void postFinish(View v) {
         TextView view;
+        int winner, looser;
 
-        int maxLegs = theGame.getNumLegs();
-        //legsPlayed++;
-        if (maxLegs >= legsPlayed) {
-            doReset(v);
+        winner = currentPlayerId;
+        if (currentPlayerId == playerOne.getId()) {
+            looser = playerTwo.getId();
         } else {
-            //GAME OVER
+            looser = playerOne.getId();
         }
-
-        int r = dbm.update_leg(currentLeg.getLegId(), currentPlayerId);
-
+        dbm.postWins(winner, true);
+        dbm.postWins(looser, false);
+        dbm.update_leg(currentLeg.getLegId(), currentPlayerId);
+        if (currentTurn != null) {
+            dbm.insert_turn(currentTurn);
+        }
         view = findViewById(R.id.p1);
         view.setBackgroundResource(0);
         view = findViewById(R.id.p2);
         view.setBackgroundResource(0);
+
+        int maxLegs = theGame.getNumLegs();
+        //legsPlayed++;
+        if (maxLegs > legsPlayed) {
+            doReset(v);
+        } else {
+            dbm.updateGameWinner(theGame.getId(), currentPlayerId);
+            dbm.close();
+
+            Intent newGame = new Intent(this, newgame_activity.class);
+            startActivity(newGame);
+        }
     }
 
     public void doPost(View v) {
@@ -310,17 +325,9 @@ public class GameActivity extends AppCompatActivity {
         if (curCol == col1Score) {
             col1Value -= tTotal;
             curCol.append("\n" + tTotal + " : " + col1Value);
-            if (col1Value == 0) {
-                //leg over ================================================================
-                enableFinish();
-            }
         } else {
             col2Value -= tTotal;
             curCol.append("\n" + tTotal + " : " + col2Value);
-            if (col2Value == 0) {
-                //leg over ================================================================
-                enableFinish();
-            }
         }
         tTotal = 0;
 
@@ -329,9 +336,10 @@ public class GameActivity extends AppCompatActivity {
             view.setEnabled(true);
             view = findViewById(R.id.button_post);
             view.setEnabled(false);
+            switchPlayer(v);
+        } else {
+            enableFinish();
         }
-
-        switchPlayer(v);
     }
 
     private void enableFinish() {
@@ -351,7 +359,6 @@ public class GameActivity extends AppCompatActivity {
         TextView old;
 
         turnCount++;
-        // ###############################################################
         if (curCol == col2Score) {
             curCol = col1Score;
             currentPlayerId = playerOne.getId();
@@ -408,7 +415,6 @@ public class GameActivity extends AppCompatActivity {
 //        private Leg currentLeg;
 //        private Turn currentTurn;
         dbm.update_leg(currentLeg.getLegId(), -1);
-
     }
 
     public void shutDown(View v) {

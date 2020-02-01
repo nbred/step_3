@@ -9,6 +9,7 @@ public class Game {
     private String GameDate;
     private Player Player1, Player2;
     private int legs;
+    private int winnerId;
 
     public Game(Player p1, Player p2, int maxlegs){
         Date Game_date;
@@ -37,4 +38,12 @@ public class Game {
         game_id = num;
     }
     public int getId(){return game_id;}
+
+    public int getWinnerId() {
+        return winnerId;
+    }
+
+    public void setWinnerId(int winnerId) {
+        this.winnerId = winnerId;
+    }
 }

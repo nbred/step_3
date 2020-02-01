@@ -137,4 +137,9 @@ public class newgame_activity extends AppCompatActivity {
 
         startActivity(i);
     }
+
+    public void doQuit(View v){
+        Intent homeIntent = new Intent(this, MainActivity.class);
+        startActivity(homeIntent);
+    }
 }

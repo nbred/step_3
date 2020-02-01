@@ -55,6 +55,8 @@ public class DBManager {
         // else insert new
         ContentValues contentValue = new ContentValues();
         contentValue.put(dbHelper.player_name, name);
+        contentValue.put(dbHelper.player_wins, 0);
+        contentValue.put(dbHelper.player_losses, 0);
         result = database.insert(dbHelper.TABLE_PLAYER, null, contentValue);
 
     }
@@ -81,6 +83,14 @@ public class DBManager {
         return -1;
     }
 
+    public void postWins(int _id, Boolean w){
+        if(w){
+            database.execSQL("UPDATE player SET wins=wins + 1 WHERE _id=" + _id);
+        }else{
+            database.execSQL("UPDATE player SET losses=losses + 1 WHERE _id=" + _id);
+        }
+    }
+
     // =============================================================================================
     // game table operations
     // =============================================================================================
@@ -95,6 +105,12 @@ public class DBManager {
         theGame.setId((int) database.insert(dbHelper.TABLE_GAME, null, contentValue));
     }
 
+    public void updateGameWinner(int gameid, int winnerid){
+        String sql = String.format("UPDATE game SET winner=%1d  WHERE _id=%2d", winnerid, gameid);
+        //System.out.print(sql);
+        database.execSQL(sql);
+    }
+
     // =============================================================================================
     // leg table operations
     // =============================================================================================
@@ -106,11 +122,10 @@ public class DBManager {
         theLeg.setId((int) database.insert(dbHelper.TABLE_LEG, null, contentValue));
     }
 
-    public int update_leg(int _id, int winner) {
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(DatabaseHelper.winner_id, winner);
-        int i = database.update(DatabaseHelper.TABLE_LEG, contentValues, DatabaseHelper.LEG_ID + " = " + _id, null);
-        return i;
+    public void update_leg(int id, int winner) {
+        String sql = String.format("UPDATE leg SET winner=%1d WHERE _id=%2d", winner, id);
+        System.out.print(sql);
+        database.execSQL(sql);
     }
 
     // =============================================================================================
