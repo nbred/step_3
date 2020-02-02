@@ -21,6 +21,7 @@ public class Game {
         Game_date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         GameDate = sdf.format(Game_date);
+        winnerId = 0;
     }
 
     public String getDate(){

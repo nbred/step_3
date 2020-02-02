@@ -10,4 +10,7 @@
     <string name="quit">Quit</string>
 
     <string name="leg_message">Leg %1d of %2d</string>
+    <string name="textview">TextView</string>
+    <string name="title_game_list">games</string>
+    <string name="title_game_detail">game Detail</string>
 </resources>

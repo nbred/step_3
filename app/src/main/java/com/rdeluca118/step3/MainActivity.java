@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void doDatabase(View v){
-
+        startActivity(new Intent(this, gameListActivity.class));
     }
 
 }

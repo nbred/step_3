@@ -59,9 +59,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + " INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, " + player_id + " INTEGER NOT NULL, " + leg_id + " INTEGER NOT NULL, " + dart_one + " INTEGER, " + dart_two + " INTEGER, " + dart_three + " INTEGER, FOREIGN KEY('leg_id') REFERENCES 'leg'('_id'), FOREIGN KEY('player_id') REFERENCES 'player'('_id'));";
 
     // Database Information
-    static final String DB_NAME = "darts118";
+    static final String DB_NAME = "darts118.db";
     // database version
-    static final int DB_VERSION = 7;
+    static final int DB_VERSION = 1;
 
     public DatabaseHelper(Context context){
         super(context,DB_NAME,null,DB_VERSION);

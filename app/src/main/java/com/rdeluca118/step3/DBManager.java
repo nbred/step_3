@@ -5,6 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
+
 import org.jetbrains.annotations.NotNull;
 
 public class DBManager {
@@ -107,7 +109,7 @@ public class DBManager {
 
     public void updateGameWinner(int gameid, int winnerid){
         String sql = String.format("UPDATE game SET winner=%1d  WHERE _id=%2d", winnerid, gameid);
-        //System.out.print(sql);
+        Log.i("DartDB",sql);
         database.execSQL(sql);
     }
 
@@ -124,7 +126,7 @@ public class DBManager {
 
     public void update_leg(int id, int winner) {
         String sql = String.format("UPDATE leg SET winner=%1d WHERE _id=%2d", winner, id);
-        System.out.print(sql);
+        Log.i("DartDB",sql);
         database.execSQL(sql);
     }
 

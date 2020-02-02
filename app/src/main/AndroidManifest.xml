@@ -9,7 +9,25 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".GameActivity"/>
+        <activity
+            android:name=".gameListActivity"
+            android:label="@string/title_game_list"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.rdeluca118.step3.MainActivity" />
+        </activity>
+        <activity
+            android:name=".gameDetailActivity"
+            android:label="@string/title_game_detail"
+            android:parentActivityName=".gameListActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.rdeluca118.step3.gameListActivity" />
+        </activity>
+        <activity android:name=".GameActivity" />
         <activity android:name=".newgame_activity" />
         <activity android:name=".MainActivity">
             <intent-filter>

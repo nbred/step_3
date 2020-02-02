@@ -296,7 +296,6 @@ public class GameActivity extends AppCompatActivity {
             doReset(v);
         } else {
             dbm.updateGameWinner(theGame.getId(), currentPlayerId);
-            dbm.close();
 
             Intent newGame = new Intent(this, newgame_activity.class);
             startActivity(newGame);
@@ -412,15 +411,19 @@ public class GameActivity extends AppCompatActivity {
 
     private void doCleanUp() {
 //        private Game theGame;
-//        private Leg currentLeg;
 //        private Turn currentTurn;
-        dbm.update_leg(currentLeg.getLegId(), -1);
+        //dbm.update_leg(currentLeg.getLegId(), -1);
     }
 
     public void shutDown(View v) {
         doCleanUp();
         Intent homeIntent = new Intent(this, MainActivity.class);
         startActivity(homeIntent);
+    }
+    @Override
+    protected void onDestroy() {
+        dbm.close();
+        super.onDestroy();
     }
 }
 
