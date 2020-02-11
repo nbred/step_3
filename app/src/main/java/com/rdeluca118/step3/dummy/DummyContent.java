@@ -1,5 +1,9 @@
 package com.rdeluca118.step3.dummy;
 
+import android.database.Cursor;
+
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,12 +27,12 @@ public class DummyContent {
      */
     public static final Map<String, DummyItem> ITEM_MAP = new HashMap<String, DummyItem>();
 
-    private static final int COUNT = 25;
+    public static void loadData(Cursor c) {
 
-    static {
-        // Add some sample items.
-        for (int i = 1; i <= COUNT; i++) {
-            addItem(createDummyItem(i));
+        if (c.moveToFirst()) {
+            do {
+                addItem(new DummyItem(String.valueOf(c.getInt(0)), c.getString(1), c.getString(7)));
+            } while (c.moveToNext());
         }
     }
 
@@ -55,18 +59,19 @@ public class DummyContent {
      */
     public static class DummyItem {
         public final String id;
-        public final String content;
-        public final String details;
+        public final String gameDate;
+        public final String winner;
 
-        public DummyItem(String id, String content, String details) {
+        public DummyItem(String id, String date, String winner) {
             this.id = id;
-            this.content = content;
-            this.details = details;
+            this.gameDate = date;
+            this.winner = winner;
         }
 
+        @NotNull
         @Override
         public String toString() {
-            return content;
+            return gameDate;
         }
     }
 }

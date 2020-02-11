@@ -16,16 +16,14 @@ public class DBManager {
     private Context context;
 
     private SQLiteDatabase database;
-    private DatabaseHelper dbHelper1;
 
     public DBManager(Context c) {
         context = c;
     }
 
-    public DBManager open() throws SQLException {
+    public void open() throws SQLException {
         dbHelper = new DatabaseHelper(context);
         database = dbHelper.getWritableDatabase();
-        return this;
     }
 
     public SQLiteDatabase getBatabase() {
@@ -40,7 +38,6 @@ public class DBManager {
     // player table operations
     // =============================================================================================
     public void insert_player(String name) {
-        long result;
 
         // if name in database skip ?
         Cursor c = database.rawQuery("select * from player where name = '" + name + "'", null);
@@ -56,16 +53,15 @@ public class DBManager {
         }
         // else insert new
         ContentValues contentValue = new ContentValues();
-        contentValue.put(dbHelper.player_name, name);
-        contentValue.put(dbHelper.player_wins, 0);
-        contentValue.put(dbHelper.player_losses, 0);
-        result = database.insert(dbHelper.TABLE_PLAYER, null, contentValue);
-
+        contentValue.put(DatabaseHelper.player_name, name);
+        contentValue.put(DatabaseHelper.player_wins, 0);
+        contentValue.put(DatabaseHelper.player_losses, 0);
+        database.insert(DatabaseHelper.TABLE_PLAYER, null, contentValue);
     }
 
     public Cursor fetch_players() {
-        String[] columns = new String[]{dbHelper.PLAYER_ID, dbHelper.player_name};
-        Cursor cursor = database.query(dbHelper.TABLE_PLAYER, columns, null, null, null, null, "name ASC");
+        String[] columns = new String[]{DatabaseHelper.PLAYER_ID, DatabaseHelper.player_name};
+        Cursor cursor = database.query(DatabaseHelper.TABLE_PLAYER, columns, null, null, null, null, "name ASC");
         if (cursor != null) {
             cursor.moveToFirst();
         }
@@ -73,10 +69,10 @@ public class DBManager {
     }
 
     public int getPlayerId(String name) {
-        String[] columns = new String[]{dbHelper.PLAYER_ID, dbHelper.player_name};
+        String[] columns = new String[]{DatabaseHelper.PLAYER_ID, DatabaseHelper.player_name};
         ContentValues contentValue = new ContentValues();
-        contentValue.put(dbHelper.player_name, name);
-        Cursor cursor = database.query(dbHelper.TABLE_PLAYER, columns, "name = '" + name + "'", null, null, null, null);
+        contentValue.put(DatabaseHelper.player_name, name);
+        Cursor cursor = database.query(DatabaseHelper.TABLE_PLAYER, columns, "name = '" + name + "'", null, null, null, null);
         if (cursor != null) {
             cursor.moveToFirst();
             int index = cursor.getColumnIndexOrThrow("_id");
@@ -85,8 +81,18 @@ public class DBManager {
         return -1;
     }
 
-    public void postWins(int _id, Boolean w){
-        if(w){
+    public Cursor getOnePLayer(int id) {
+        Cursor c;
+        String sql = String.format("select * from player where _id = %1d", id);
+        c = database.rawQuery(sql, null);
+        if (c.moveToFirst()) {
+            return (c);
+        }
+        return null;
+    }
+
+    public void postWins(int _id, @NotNull Boolean w) {
+        if (w) {
             database.execSQL("UPDATE player SET wins=wins + 1 WHERE _id=" + _id);
         }else{
             database.execSQL("UPDATE player SET losses=losses + 1 WHERE _id=" + _id);
@@ -100,11 +106,11 @@ public class DBManager {
 
         int[] p = theGame.getPlayersIds();
         ContentValues contentValue = new ContentValues();
-        contentValue.put(dbHelper.game_date, theGame.getDate());
-        contentValue.put(dbHelper1.game_player1, p[0]);
-        contentValue.put(dbHelper1.game_player2, p[1]);
-        contentValue.put(dbHelper.game_num_legs, theGame.getNumLegs());
-        theGame.setId((int) database.insert(dbHelper.TABLE_GAME, null, contentValue));
+        contentValue.put(DatabaseHelper.game_date, theGame.getDate());
+        contentValue.put(DatabaseHelper.game_player1, p[0]);
+        contentValue.put(DatabaseHelper.game_player2, p[1]);
+        contentValue.put(DatabaseHelper.game_num_legs, theGame.getNumLegs());
+        theGame.setId((int) database.insert(DatabaseHelper.TABLE_GAME, null, contentValue));
     }
 
     public void updateGameWinner(int gameid, int winnerid){
@@ -113,15 +119,35 @@ public class DBManager {
         database.execSQL(sql);
     }
 
+    public Cursor getGameList() {
+        Cursor c;
+        String sql = "SELECT * FROM game AS a INNER JOIN player AS b ON a.winner = b._id ORDER BY date;";
+        c = database.rawQuery(sql, null);
+        if (c.moveToFirst()) {
+            return (c);
+        }
+        return null;
+    }
+
+    public Cursor getOneGame(int gameID) {
+        Cursor c;
+        String sql = String.format("select * from game where _id = %1d", gameID);
+        c = database.rawQuery(sql, null);
+        if (c.moveToFirst()) {
+            return (c);
+        }
+        return null;
+    }
+
     // =============================================================================================
     // leg table operations
     // =============================================================================================
 
     public void insert_leg(@NotNull Leg theLeg) {
         ContentValues contentValue = new ContentValues();
-        contentValue.put(dbHelper1.game_id, theLeg.getGameId());
-        contentValue.put(dbHelper1.winner_id, 0);
-        theLeg.setId((int) database.insert(dbHelper.TABLE_LEG, null, contentValue));
+        contentValue.put(DatabaseHelper.game_id, theLeg.getGameId());
+        contentValue.put(DatabaseHelper.winner_id, 0);
+        theLeg.setId((int) database.insert(DatabaseHelper.TABLE_LEG, null, contentValue));
     }
 
     public void update_leg(int id, int winner) {
@@ -130,6 +156,16 @@ public class DBManager {
         database.execSQL(sql);
     }
 
+    // select * from leg where game_id = 1
+    public Cursor getLegsForGame(int game) {
+        Cursor c;
+        String sql = String.format("select * from leg where game_id = %1d order by _id ASC", game);
+        c = database.rawQuery(sql, null);
+        if (c.moveToFirst()) {
+            return (c);
+        }
+        return null;
+    }
     // =============================================================================================
     // turn table operations
     // =============================================================================================
@@ -138,14 +174,23 @@ public class DBManager {
         int[] darts = theTurn.getDarts();
 
         ContentValues contentValue = new ContentValues();
-        contentValue.put(dbHelper.player_id, theTurn.getPlayerId());
-        contentValue.put(dbHelper.leg_id, theTurn.getLegId());
-        contentValue.put(dbHelper.dart_one, darts[0]);
-        contentValue.put(dbHelper.dart_two, darts[1]);
-        contentValue.put(dbHelper.dart_three, darts[2]);
-        database.insert(dbHelper.TABLE_TURN, null, contentValue);
+        contentValue.put(DatabaseHelper.player_id, theTurn.getPlayerId());
+        contentValue.put(DatabaseHelper.leg_id, theTurn.getLegId());
+        contentValue.put(DatabaseHelper.dart_one, darts[0]);
+        contentValue.put(DatabaseHelper.dart_two, darts[1]);
+        contentValue.put(DatabaseHelper.dart_three, darts[2]);
+        database.insert(DatabaseHelper.TABLE_TURN, null, contentValue);
     }
 
+    public Cursor getTurnsForLeg(int leg){
+        Cursor c;
+        String sql = String.format("select * from turn where leg_id = %1d", leg);
+        c = database.rawQuery(sql, null);
+        if (c.moveToFirst()) {
+            return (c);
+        }
+        return null;
+    }
     // =============================================================================================
     // =============================================================================================
 

@@ -1,18 +1,15 @@
 package com.rdeluca118.step3;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.res.Resources;
+import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
-import android.content.Intent;
-import android.database.Cursor;
 
-import java.lang.String;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class newgame_activity extends AppCompatActivity {
     private DBManager db;

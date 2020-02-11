@@ -2,27 +2,23 @@ package com.rdeluca118.step3;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NavUtils;
-import androidx.appcompat.app.ActionBar;
-
-import android.view.MenuItem;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.rdeluca118.step3.dummy.DummyContent;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -47,15 +43,9 @@ public class gameListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_list);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
-
-        // Show the Up button in the action bar.
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
 
         if (findViewById(R.id.game_detail_container) != null) {
             // The detail container view will be present only in the
@@ -68,6 +58,12 @@ public class gameListActivity extends AppCompatActivity {
         View recyclerView = findViewById(R.id.game_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
+        DBManager dbm = new DBManager(getApplicationContext());
+        dbm.open();
+        Cursor c = dbm.getGameList();
+        DummyContent.loadData(c);
+        c.close();
+        dbm.close();
     }
 
     @Override
@@ -127,6 +123,7 @@ public class gameListActivity extends AppCompatActivity {
             mTwoPane = twoPane;
         }
 
+        @NotNull
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
@@ -137,7 +134,7 @@ public class gameListActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
             holder.mIdView.setText(mValues.get(position).id);
-            holder.mContentView.setText(mValues.get(position).content);
+            holder.mContentView.setText(mValues.get(position).gameDate);
 
             holder.itemView.setTag(mValues.get(position));
             holder.itemView.setOnClickListener(mOnClickListener);
@@ -154,8 +151,8 @@ public class gameListActivity extends AppCompatActivity {
 
             ViewHolder(View view) {
                 super(view);
-                mIdView = (TextView) view.findViewById(R.id.id_text);
-                mContentView = (TextView) view.findViewById(R.id.content);
+                mIdView = view.findViewById(R.id.id_text);
+                mContentView = view.findViewById(R.id.content);
             }
         }
     }
