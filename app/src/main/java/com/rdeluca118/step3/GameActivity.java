@@ -382,19 +382,20 @@ public class GameActivity extends AppCompatActivity {
 
         TextView checkout = findViewById(R.id.tofinish);
         checkout.setText(checkOut);
-    }
+        }
 
-    private String canCheckOut(int score) {
-        String result;
-        int base = 170;
-        result = "";
+        private String canCheckOut(int score) {
+            String result;
+            int base = 170;
+            result = "";
 
-        if (score <= base) {
-            int c = finishes.length;
-            int i = (base - c) + 1;
-            if (score > i) {
-                result = finishes[score - i];
-            }
+            // update finish ===============================#################################===============
+            if (score <= base) {
+                int c = finishes.length;
+                int i = (base - c) + 1;
+                if (score > i) {
+                    result = finishes[score - i];
+                }
         }
         return result;
     }
