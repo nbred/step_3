@@ -140,6 +140,7 @@ public class GameActivity extends AppCompatActivity {
         view = findViewById(R.id.button_count);
         view.setEnabled(true);
         view = findViewById(R.id.button_post);
+
         view.setEnabled(false);
 
         legsPlayed++;
