@@ -24,14 +24,12 @@ MainActivity extends AppCompatActivity {
     }
 
     public void doQuit(View v) {
-        int pid = android.os.Process.myPid();
+        /*int pid = android.os.Process.myPid();
         android.os.Process.killProcess(pid);
-        System.exit(0);
-/*
+        System.exit(0);*/
         Intent homeIntent = new Intent(Intent.ACTION_MAIN);
-        homeIntent.addCategory( Intent.CATEGORY_HOME );
+        homeIntent.addCategory(Intent.CATEGORY_HOME);
         homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(homeIntent);
-*/
     }
 }

@@ -190,6 +190,7 @@ public class GameActivity extends AppCompatActivity {
                 if (darts[dartOrd] == 25) {
                     // no TRIPLE 25
                     taskFailed();
+                    return;
                 } else {
                     int x = darts[dartOrd] * 3;
                     darts[dartOrd] = x;
@@ -358,10 +359,11 @@ public class GameActivity extends AppCompatActivity {
         TextView old;
 
         turnCount++;
+        checkOut = "";
         if (curCol == col2Score) {
             curCol = col1Score;
             currentPlayerId = playerOne.getId();
-            checkOut = canCheckOut(col1Value);
+
             pNmae = findViewById(R.id.p1);
             old = findViewById(R.id.p2);
         } else {
